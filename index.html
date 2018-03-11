@@ -6,12 +6,15 @@
     <meta charset="UTF-8">
     <title>Train Schedule</title>
 
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
     <!-- Bootstrap CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
     <!-- Firebase Reference -->
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
@@ -23,66 +26,86 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="jumbotron jumbotron-fluid bg-dark">
-            <div class="container ">
-                <h1 class="display-4 text-center text-light">UNCC Train Network</h1>
-                <p class="lead text-center text-light">Your real time train schedule</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-dark mb-3 ">
-                    <div class="card-header">Current Train Schedule</div>
-                    <div class="card-body ">
-                        <table class="table table-hover ">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Train Name</th>
-                                    <th scope="col">Destination</th>
-                                    <th scope="col">Frequency (min)</th>
-                                    <th scope="col">Next Arrival</th>
-                                    <th scope="col">Minutes Away</th>                                
-                                </tr>
-                            </thead>
-                            <tbody>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
+        <a class="navbar-brand" href="#">Current Location: Train Schedule</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                            </tbody>
-                        </table>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/bradleyaw">Github Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/bradleyaw/">LinkedIn</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        Projects
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://bradleyaw.github.io/GifHeaven/">Gif Heaven</a>
+                        <a class="dropdown-item" href="https://bradleyaw.github.io/TrainSchedule/">Train Schedule</a>
+                        <a class="dropdown-item" href="https://bradleyaw.github.io/TriviaGame/">Trivia Game</a>
+                        <a class="dropdown-item" href="https://bradleyaw.github.io/week-4-game/">Crystal Collector</a>
+                        <a class="dropdown-item" href="https://bradleyaw.github.io/PsychicGame/">Psychic Game</a>
                     </div>
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-dark mb-3 ">
-                    <div class="card-header">Add Train</div>
-                    <div class="card-body text-dark">
-                        <form>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput">Train Name</label>
-                                <input type="text" class="form-control" id="trainName" placeholder="Ex. Center City Express">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">Destination</label>
-                                <input type="text" class="form-control" id="destination" placeholder="Ex. Charlotte">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">First Train Time (military time)</label>
-                                <input type="text" class="form-control" id="time" placeholder="Ex. 14:00">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">Frequency (min)</label>
-                                <input type="number" class="form-control" id="frequency" placeholder="Ex. 30 minutes">
-                            </div>
-                            <button type="submit" id="submitID" class="btn btn-primary mb-2">Submit</button>
-                        </form>
+    </nav>
+    <div class="container-fluid">
+            <div class="jumbotron jumbotron-fluid bg-light py-3 mb-2">
+                <div class="container">
+                        <h3 class="display-4 text-center text-dark">Charlotte Train Schedule</h3>
+                    <table class="table table-hover ">
+                        <thead>
+                            <tr>
+                                <th scope="col">Train Name</th>
+                                <th scope="col">Destination</th>
+                                <th scope="col">Frequency (min)</th>
+                                <th scope="col">Next Arrival</th>
+                                <th scope="col">Minutes Away</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+
+
+        <div class="jumbotron jumbotron-fluid bg-light py-3 mb-0">
+            <div class="container">
+                <h3>Add Train</h3>
+                <form>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Train Name</label>
+                        <input type="text" class="form-control" id="trainName" placeholder="Ex. Center City Express">
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Destination</label>
+                        <input type="text" class="form-control" id="destination" placeholder="Ex. Charlotte">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">First Train Time (military time)</label>
+                        <input type="text" class="form-control" id="time" placeholder="Ex. 14:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Frequency (min)</label>
+                        <input type="number" class="form-control" id="frequency" placeholder="Ex. 30 minutes">
+                    </div>
+                    <button type="submit" id="submitID" class="btn btn-success mb-2">Submit</button>
+                </form>
             </div>
-        </div>
     </div>
 
+    </div>
+    </div>
     <!-- Script -->
     <script src="assets/javascript/logic.js"></script>
 
