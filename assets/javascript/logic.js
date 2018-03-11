@@ -37,28 +37,43 @@ $("#submitID").on("click", function (event) {
     $("#frequency").val("");
 
 });
-
+// On databse update or page load
 database.ref().on("child_added", function (snapshot) {
+
+    // set variables for each data point
     var dataName = snapshot.val().trainName;
     var dataDest = snapshot.val().trainDestination;
     var dataTime = snapshot.val().trainTime;
     var dataFreq = snapshot.val().trainFrequency;
 
+    // Converts database/submitted time to readable format by moment.js and places in past
     var convTime = moment(dataTime, "HH:mm").subtract(1, "years");
 
+    // Records difference in minutes between now and previous variable.
     var timeDiff = moment().diff(moment(convTime), "minutes");
 
+    // Gets mod(remainder) that determines when the train last came in minutes
     var timeRem = timeDiff % dataFreq;
 
+    // Gives us how many minutes until the next train.
     var timeNext = dataFreq - timeRem
+
+    // Difference in time between our first train time and current time in minutes. Only applies if first train of day has not ran.
     var freqFirst = moment(moment(dataTime, "HH:mm")).diff(moment(), "minutes");
 
+    // This is the current time + minutes until next train. Aka, arrival time.
     var timeArriv = moment().add(timeNext, "minutes");
-    var convArriv = moment(timeArriv).format("hh:mm")
 
+    // The two variables are the final arrival times i nthe format we want to display. 
+    // The first is based on the train that has started running today. The other is based on the idea that first train has yet to run.
+    var convArriv = moment(timeArriv).format("hh:mm A");
+    var convArrivElse = moment(dataTime, "HH:mm").format("hh:mm A");
+
+    // Turn dataTime and currTime into integers so the values can be leveraged for if statement below.
     var dataTimeInt = parseInt(moment(moment(dataTime, "HH:mm")).format("x"));
     var currTimeInt = parseInt(moment().format("x"));
 
+    // If the first train of the day has ran, display the following...
     if (dataTimeInt < currTimeInt) {
         $("tbody").append(
             "<tr>" +
@@ -70,13 +85,14 @@ database.ref().on("child_added", function (snapshot) {
             "</tr>"
         );
     }
+    // Else, display the following...
     else {
         $("tbody").append(
             "<tr>" +
                 "<td scope='col'>"      + dataName +
                 "</td><td scope='col'>" + dataDest +
                 "</td><td scope='col'>" + dataFreq +
-                "</td><td scope='col'>" + dataTime +
+                "</td><td scope='col'>" + convArrivElse +
                 "</td><td scope='col'>" + freqFirst +
             "</tr>"
         );
